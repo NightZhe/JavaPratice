@@ -1,0 +1,2 @@
+# JavaPratice
+Base Java Pratice
