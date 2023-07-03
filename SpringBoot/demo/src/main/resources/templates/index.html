@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <script src="js/main.js"></script>
+    <link href="css/main.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
+</head>
+
+<body onload="load()">
+    <header>
+        <nav>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section>
+            <h1>Welcome to my website!</h1>
+            <form action="login" method="post">
+                <label>帳號</label>
+                <input type="text" name="sname" id="sname"></intpu><br />
+                <label>密碼</label>
+                <input type="text" name="password" id="password"><br /><br />
+
+                <button type="submit" name="submit" id="enter">登入</button>
+            </form>
+
+            <label th:text="${message}">返回信息</label> <br />
+
+            <label th:text="${message1}">創建資料庫表個信息</label> <br />
+
+            <button type="submit" name="register" onclick="location.href='register'" id="register">註冊</button>
+            <button type="submit" name="forgetpassword" id="forgetpassword"
+                onclick="location.href='forget'">忘記密碼</button>
+            <button type="submit" naem="createTable" id="createTable" onclick=create();>創建資料庫表格</button>
+            <br />
+            <br />
+            <table id=table border=1>
+                <tr>
+                    <td>id</td>
+                    <td>sno</td>
+                    <td>sname</td>
+                    <td>sage</td>
+                    <td>password</td>
+                    <td>email</td>
+                    <td>edit</td>
+                    <td>delete</td>
+                </tr>
+            </table>
+
+            <script>
+                function load() {
+                    $.ajax({
+                        url: 'list',
+                        type: 'post',
+                        success: function (response) {
+                            data = response.data;
+                            for (i = 0; i < data.length; i++) {
+                                $("#table").append("<tr class='tr'><td>" + data[i].id + "</td><td>" + data[i].son + "</td><td>" + data[i].sname + "</td><td>" + data[i].sage + "</td><td>" + data[i].password + "</td><td>" + data[i].email + "</td><td> <a href='#' onclick=edit(" + data[i].id + ");> edit</a> </td><td><a href='#' onclick=del(" + data[i].id + ");>delete</a> </td> </tr> ");
+                            }
+                        }
+
+                    });
+                };
+                function create() {
+                    $.ajax({
+                        url: 'creatTable',
+                        type: 'post',
+                        data: { "1": "aaa", "2": "bbb" },
+                        success: function (data) {
+                            alert("創建成功");
+                        },
+                        error: function () {
+                            alert("創建失敗");
+                        }
+                    })
+                }
+            </script>
+
+        </section>
+
+
+
+    </main>
+    <footer>
+        <p>&copy; 2023 My Website. All Rights Reserved.</p>
+    </footer>
+
+</body>
+
+
+</html>

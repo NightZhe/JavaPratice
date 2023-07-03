@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+   <!--用th:each接收一個可迭代的物件，將thymeleaf傳遞過來的參數"list"，別名為i-->
+    <ul th:each="i:${StudentList}">
+        <!--將i渲染至畫面-->
+        <li th:test="${i}"></li>
+        <li th:text="${i.id}"></li>
+        <li th:text="${i.sno}"></li>
+        <li th:text="${i.sname}"></li>
+        <li th:text="${i.sage}"></li>
+    </ul>
+
+
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <script src="js/main.js"></script>
+    <link href="css/main.css" rel="stylesheet">
+</head>
+<header>
+    <nav>
+        <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Contact</a></li>
+        </ul>
+    </nav>
+</header>
+<main>
+    <section>
+        <h1>Welcome to Forget Password !</h1>
+        <form action="forgetPassword" method="post">
+            <label>帳號</label>
+            <input type="text" name="sname" id="sname"></intpu><br/>
+            <br/>
+            <button type="submit"name="submit" id="enter">送出</button>
+        </form>
+
+        <label th:text="${message}">返回信息</label> <br />
+
+        
+    </section>
+
+   
+   
+</main>
+<footer>
+    <p>&copy; 2023 My Website. All Rights Reserved.</p>
+</footer>
+</html>
