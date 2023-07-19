@@ -5,12 +5,14 @@ import java.util.List;
 import javax.mail.MessagingException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.objenesis.ObjenesisHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
 import com.example.demo.Dao.StudentDao;
 import com.example.demo.Model.JavaMail;
 import com.example.demo.Model.Student;
+import jakarta.servlet.http.HttpSession;
 
 @Service
 
@@ -31,9 +33,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public List<Student> selectStudent() {
-        // return studentDao.selectStudent();
         return null;
-
     }
 
     @Override
@@ -56,7 +56,6 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Boolean login(Student student) {
-
         String md5Psd = DigestUtils.md5DigestAsHex(student.getPassword().getBytes());
         Student newStudent = new Student(student.getSname(), md5Psd);
         System.out.println(newStudent.getSname());
@@ -101,5 +100,10 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public List<Student> list() {
         return studentDao.list();
+    }
+
+    @Override
+    public List<Student> list(Student student) {
+        return studentDao.list(student);
     }
 }

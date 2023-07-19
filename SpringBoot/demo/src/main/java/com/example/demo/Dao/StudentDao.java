@@ -1,14 +1,12 @@
 package com.example.demo.Dao;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.lang.Nullable;
+
 import org.springframework.stereotype.Repository;
 import com.example.demo.Model.Student;
 
@@ -139,13 +137,34 @@ public class StudentDao {
 
 	public List<Student> list() {
 		StringBuffer sql = new StringBuffer();
-		sql.append("select * from STUDENT ");
+		sql.append(" select * from Student ");
 		sql.append(" where email = '123@gmail.com' ");
 		sql.append(" order by id DESC ");
 		String sql1 = "select * from STUDENT order by id DESC";
 		RowMapper rowMapper = new StudentRowMapper();
-		List<Student> allList = jdbcTemplate.query(sql.toString(), rowMapper);
+		List<Student> allList = jdbcTemplate.query(sql1.toString(), rowMapper);
 
+		return allList;
+
+	}
+
+	public List<Student> list(Student student) {
+		String sql = "SELECT * FROM Student WHERE sname LIKE ? or sno = ? order by id desc ";
+		RowMapper<Student> rowMapper = new StudentRowMapper();
+		// Vector<Object> params = new Vector<Object>();
+		// params.add(student.getSname() + "%");
+		// params.add(student.getSno());
+
+		Object[] params = { student.getSname() + "%", student.getSno() };
+		// for (int i = 0; params.size() > i; i++) {
+		// System.out.println("params value:" + params.get(i));
+		// }
+
+		// List<Student> allList = jdbcTemplate.query(sql, rowMapper, student.getSname()
+		// + "%", student.getSno());
+		// List<Student> allList = jdbcTemplate.query(sql, rowMapper, params.toArray());
+
+		List<Student> allList = jdbcTemplate.query(sql, rowMapper, params);
 		return allList;
 
 	}

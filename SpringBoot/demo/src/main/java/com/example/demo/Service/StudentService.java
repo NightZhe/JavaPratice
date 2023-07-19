@@ -26,4 +26,6 @@ public interface StudentService {
 
     public List<Student> list();// 查詢學生全部的list;
 
+    public List<Student> list(Student student); //有條件查詢
+
 }

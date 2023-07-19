@@ -9,7 +9,7 @@
 
 </head>
 
-<body onload="load()">
+<body>
     <header>
         <nav>
             <ul>
@@ -38,10 +38,30 @@
             <button type="submit" name="register" onclick="location.href='register'" id="register">註冊</button>
             <button type="submit" name="forgetpassword" id="forgetpassword"
                 onclick="location.href='forget'">忘記密碼</button>
-            <button type="submit" naem="createTable" id="createTable" onclick=create();>創建資料庫表格</button>
+            <button type="submit" name="createTable" id="createTable" onclick=create();>創建資料庫表格</button> <br />
+            sno<input type="text" id="serchSno" name="sno">
+            sname<input type="text" id="serchSname" name="sname">
+
+            <button type="submit" name="查詢表格" id="searchData" onclick=load();>查詢表格</button> <br />
+
+            <table border="2">
+                <tr>
+                    <td>dsfsadfasdf</td>
+                    <td>34567989</td>
+                </tr>
+                <tr>
+                    <td>484fgihiherg</td>
+                </tr>
+                <tr>
+                    <td>999477843dfqhwf</td>
+                </tr>
+            </table>
+
+            <input type="text" property="aaa" name="bbb" value="">測試property
+            <button type="submit" id="getproperty" onclick=getproperty()>獲取property</button>
+
             <br />
-            <br />
-            <table id=table border=1>
+            <table id=table class="listdata" border=1>
                 <tr>
                     <td>id</td>
                     <td>sno</td>
@@ -53,35 +73,53 @@
                     <td>delete</td>
                 </tr>
             </table>
-
+            <hr>
             <script>
+                function getproperty() {
+                    $("[name='bbb']").val("gggggh123234544");
+                    getprop = $("[name='bbb']").val();
+                    console.log(getprop);
+                }
+
+
+
                 function load() {
+                    sno = $('#serchSno').val();
+                    sname = $('#serchSname').val();
+                    console.log(sno);
+                    console.log(sname);
                     $.ajax({
                         url: 'list',
                         type: 'post',
+                        data: { sno: $('#serchSno').val(), sname: $('#serchSname').val() },
                         success: function (response) {
-                            data = response.data;
-                            for (i = 0; i < data.length; i++) {
-                                $("#table").append("<tr class='tr'><td>" + data[i].id + "</td><td>" + data[i].son + "</td><td>" + data[i].sname + "</td><td>" + data[i].sage + "</td><td>" + data[i].password + "</td><td>" + data[i].email + "</td><td> <a href='#' onclick=edit(" + data[i].id + ");> edit</a> </td><td><a href='#' onclick=del(" + data[i].id + ");>delete</a> </td> </tr> ");
+                            result = response.data;
+                            for (i = 0; i < result.length; i++) {
+                                $(".listdata").append("<tr class='tr'><td>"
+                                    + result[i].id + "</td><td>"
+                                    + result[i].sno + "</td><td>"
+                                    + result[i].sname + "</td><td>"
+                                    + result[i].sage + "</td><td>"
+                                    + result[i].password + "</td><td>"
+                                    + result[i].email + "</td><td> "
+                                    + "<a href='#' onclick=edit(" + result[i].id + ");> edit</a> </td >"
+                                    + " <td><a href='#' onclick=del(" + result[i].id + ");>delete</a> </td ></tr > ")
                             }
                         }
-
                     });
                 };
+
                 function create() {
                     $.ajax({
                         url: 'creatTable',
                         type: 'post',
                         data: { "1": "aaa", "2": "bbb" },
-                        success: function (data) {
-                            alert("創建成功");
-                        },
-                        error: function () {
-                            alert("創建失敗");
-                        }
+                        success:
+                            function (data) { alert("創建成功"); },
+                        error:
+                            function () { alert("創建失敗"); }
                     })
-                }
-            </script>
+                } </script>
 
         </section>
 

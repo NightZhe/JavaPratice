@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.Dao.StudentDao;
+import com.example.demo.Model.LogUtil;
 import com.example.demo.Model.Student;
 import com.example.demo.Service.StudentService;
 
@@ -34,6 +35,7 @@ public class MainController {
     // 跳轉註冊
     @RequestMapping("/register")
     public String register(Model model) {
+        LogUtil.e("系統錯誤", "this is no args()");
         return "register";
     }
 
@@ -47,8 +49,8 @@ public class MainController {
     @RequestMapping("/comfirm")
     @ResponseBody
     public Map<String, Object> checkName(Student student) {
-        System.out.println("帳號:" + student.getSname());
-        System.out.println("密碼:" + student.getPassword());
+        System.out.println("jsp送到action帳號:" + student.getSname());
+        System.out.println("jsp送到action密碼:" + student.getPassword());
         Map<String, Object> map = new HashMap<>();
         if (studentService.checkName(student)) {
             map.put("message", "repeat");
@@ -81,11 +83,11 @@ public class MainController {
     public String login(Model model, String sname, String password, HttpSession session) {
         session.setAttribute(sname, "valid");
         Object sessionvalue = session.getAttribute(sname);
-        System.out.println(sessionvalue);
+        System.out.println("sessionvalue:" + sessionvalue);
         System.out.println("---------------");
 
-        System.out.println(sname);
-        System.out.println(password);
+        System.out.println("indexform:" + sname);
+        System.out.println("indexform:" + password);
         Student student = new Student(sname, password);
         if (studentService.login(student)) {
             model.addAttribute("sname", student.getSname());
@@ -155,8 +157,10 @@ public class MainController {
     @RequestMapping("/list")
     @ResponseBody
     public Map<String, Object> getlist(Student student) {
+        System.out.println("index:data sno :" + student.getSno());
+        System.out.println("index:data sname :" + student.getSname());
         Map<String, Object> map = new HashMap<String, Object>();
-        List<Student> list = studentService.list();
+        List<Student> list = studentService.list(student);
         if (list != null) {
             map.put("staus", "200");
             map.put("data", list);
@@ -164,10 +168,17 @@ public class MainController {
             return map;
         } else {
             map.put("staus", "400");
-            map.put("mseeage", "error");
+            map.put("mseeage", "沒有資料");
         }
 
         return map;
     }
+    // 如果使用次方法，前端function load() result = response.data; => response ，一樣可以運行
+    // @RequestMapping("/list")
+    // @ResponseBody
+    // public List getlist(Student student) {
+    // List<Student> list = studentService.list(student);
+    // return list;
+    // }
 
 }
