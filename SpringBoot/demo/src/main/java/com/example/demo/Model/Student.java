@@ -13,11 +13,12 @@ public class Student {
     private int sage;
     private String password;
     private String email;
+    private int payid;
+    private String payName;
 
     public Student() {
 
     }
-
 
     public Student(String sname) {
         this.sname = sname;
@@ -108,9 +109,25 @@ public class Student {
         this.email = email;
     }
 
+    public int getPayid() {
+        return payid;
+    }
+
+    public void setPayid(int payid) {
+        this.payid = payid;
+    }
+
     @Override
     public String toString() {
         return "Student{" + "sno='" + sno + '\'' + ", sname='" + sname + '\'' + ", sage=" + sage + '}' + "\n";
+    }
+
+    public String getPayName() {
+        return payName;
+    }
+
+    public void setPayName(String payName) {
+        this.payName = payName;
     }
 
 }

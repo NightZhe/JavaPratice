@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.mail.MessagingException;
 
+import com.example.demo.Model.PayName;
 import com.example.demo.Model.Student;
 
 public interface StudentService {
@@ -26,6 +27,8 @@ public interface StudentService {
 
     public List<Student> list();// 查詢學生全部的list;
 
-    public List<Student> list(Student student); //有條件查詢
+    public List<Student> list(Student student); // 有條件查詢
+
+    public List<PayName> payList();// 付款方式List
 
 }

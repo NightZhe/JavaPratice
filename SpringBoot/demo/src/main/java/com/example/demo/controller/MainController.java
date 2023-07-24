@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Iterator;
+
 import javax.mail.MessagingException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -180,5 +180,20 @@ public class MainController {
     // List<Student> list = studentService.list(student);
     // return list;
     // }
+
+    @RequestMapping("/paydownselect")
+    @ResponseBody
+    public Map<String, Object> getPayMethod() {
+
+        Map<String, Object> map = new HashMap<String, Object>();
+        List payList = studentService.payList();
+        if (payList != null) {
+            map.put("data", payList);
+            map.put("message", "success");
+        } else {
+            map.put("message", "error");
+        }
+        return map;
+    }
 
 }

@@ -1,18 +1,14 @@
 package com.example.demo.Service;
 
 import java.util.List;
-
 import javax.mail.MessagingException;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.objenesis.ObjenesisHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
-
 import com.example.demo.Dao.StudentDao;
 import com.example.demo.Model.JavaMail;
+import com.example.demo.Model.PayName;
 import com.example.demo.Model.Student;
-import jakarta.servlet.http.HttpSession;
 
 @Service
 
@@ -105,5 +101,10 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public List<Student> list(Student student) {
         return studentDao.list(student);
+    }
+
+    @Override
+    public List<PayName> payList() {
+        return studentDao.payList();
     }
 }

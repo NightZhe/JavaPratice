@@ -1,6 +1,7 @@
 package com.example.demo.Dao;
 
 import java.util.List;
+import java.util.Vector;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -8,6 +9,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
 import org.springframework.stereotype.Repository;
+
+import com.example.demo.Model.PayName;
 import com.example.demo.Model.Student;
 
 @Repository
@@ -69,32 +72,6 @@ public class StudentDao {
 		return (count > 0);
 	}
 
-	// public List<Student> selectStudent(){
-
-	// List<Student>st = new ArrayList<>();
-
-	// try{
-	// String select = "select * from student";
-
-	// jdbcTemplate.query(select,
-	// (rs, rowNum) -> (
-	// st.add(
-	// new Student(
-	// rs.getInt("id"),
-	// rs.getString("sno"),
-	// rs.getString("sname"),
-	// rs.getInt("sage")
-	// )
-	// )
-	// )
-	// );
-	// }
-	// catch (Exception e) {
-	// System.out.println(e);
-	// }
-	// return st;
-	// }
-
 	public Integer updateStudent(Student student) {
 		System.out.println();
 		try {
@@ -149,24 +126,40 @@ public class StudentDao {
 	}
 
 	public List<Student> list(Student student) {
-		String sql = "SELECT * FROM Student WHERE sname LIKE ? or sno = ? order by id desc ";
+		Vector<String> params = new Vector<String>();
+		StringBuffer sql = new StringBuffer();
+		sql.append("select id,sno,sname,payid,(");
+		sql.append(" select payname from paymethod ");
+		sql.append(" where id = student.payid ) as PAYCNAME");
+		sql.append(" from student ");
+		sql.append(" where 1=1 ");
+		if (student.getSname() != "") {
+			sql.append(" and sname like ? ");
+			params.add(student.getSname() + "%");
+		}
+		if (student.getSno() != "") {
+			sql.append(" and sno = ? ");
+			params.add(student.getSno());
+		}
+		if (student.getPayid() != 0) {
+			sql.append(" and payid = ? ");
+			params.add(String.valueOf(student.getPayid()));
+			;
+		}
+
 		RowMapper<Student> rowMapper = new StudentRowMapper();
-		// Vector<Object> params = new Vector<Object>();
-		// params.add(student.getSname() + "%");
-		// params.add(student.getSno());
 
-		Object[] params = { student.getSname() + "%", student.getSno() };
-		// for (int i = 0; params.size() > i; i++) {
-		// System.out.println("params value:" + params.get(i));
-		// }
-
-		// List<Student> allList = jdbcTemplate.query(sql, rowMapper, student.getSname()
-		// + "%", student.getSno());
-		// List<Student> allList = jdbcTemplate.query(sql, rowMapper, params.toArray());
-
-		List<Student> allList = jdbcTemplate.query(sql, rowMapper, params);
+		List<Student> allList = jdbcTemplate.query(sql.toString(), rowMapper, params.toArray());
 		return allList;
 
+	}
+
+	public List<PayName> payList() {
+		RowMapper<PayName> rowMapper = new PayNameRowMapper();
+		String sql = "select * from paymethod";
+
+		List<PayName> payList = jdbcTemplate.query(sql, rowMapper);
+		return payList;
 	}
 
 }

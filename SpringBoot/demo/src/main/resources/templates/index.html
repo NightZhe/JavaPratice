@@ -41,8 +41,10 @@
             <button type="submit" name="createTable" id="createTable" onclick=create();>創建資料庫表格</button> <br />
             sno<input type="text" id="serchSno" name="sno">
             sname<input type="text" id="serchSname" name="sname">
-
-            <button type="submit" name="查詢表格" id="searchData" onclick=load();>查詢表格</button> <br />
+            支付方式<select id="payMethod">
+                <option value="0">全選</option>
+            </select>
+            <button type="submit" name="查詢表格" id="searchData" onclick=search();>搜索</button> <br />
 
             <table border="2">
                 <tr>
@@ -66,42 +68,50 @@
                     <td>id</td>
                     <td>sno</td>
                     <td>sname</td>
-                    <td>sage</td>
-                    <td>password</td>
-                    <td>email</td>
+                    <td>payid</td>
+                    <td>payName</td>
                     <td>edit</td>
                     <td>delete</td>
                 </tr>
             </table>
             <hr>
             <script>
-                function getproperty() {
-                    $("[name='bbb']").val("gggggh123234544");
-                    getprop = $("[name='bbb']").val();
-                    console.log(getprop);
-                }
+
+                $(document).ready(function () {
+                    $.ajax({
+                        url: 'paydownselect',
+                        type: 'post',
+                        success: function (response) {
+                            result = response.data;
+                            for (i = 0; i < result.length; i++) {
+                                $("#payMethod").append("<option value=" + result[i].id + ">" + result[i].payname + "</option>");
+                            }
+                        }
+                    })
+                })
 
 
-
-                function load() {
+                function search() {
                     sno = $('#serchSno').val();
                     sname = $('#serchSname').val();
+                    payMethod = $('#payMethod').val();
+                    console.log("payMethod: " + payMethod);
                     console.log(sno);
                     console.log(sname);
                     $.ajax({
                         url: 'list',
                         type: 'post',
-                        data: { sno: $('#serchSno').val(), sname: $('#serchSname').val() },
+                        data: { sno: $('#serchSno').val(), sname: $('#serchSname').val(), payid: $('#payMethod').val() },
                         success: function (response) {
+                            $(".tr").remove();
                             result = response.data;
                             for (i = 0; i < result.length; i++) {
                                 $(".listdata").append("<tr class='tr'><td>"
                                     + result[i].id + "</td><td>"
                                     + result[i].sno + "</td><td>"
                                     + result[i].sname + "</td><td>"
-                                    + result[i].sage + "</td><td>"
-                                    + result[i].password + "</td><td>"
-                                    + result[i].email + "</td><td> "
+                                    + result[i].payid + "</td><td>"
+                                    + result[i].payName + "</td><td>"
                                     + "<a href='#' onclick=edit(" + result[i].id + ");> edit</a> </td >"
                                     + " <td><a href='#' onclick=del(" + result[i].id + ");>delete</a> </td ></tr > ")
                             }
@@ -119,7 +129,14 @@
                         error:
                             function () { alert("創建失敗"); }
                     })
-                } </script>
+                }
+
+                function getproperty() {
+                    $("[name='bbb']").val("gggggh123234544");
+                    getprop = $("[name='bbb']").val();
+                    console.log(getprop);
+                }
+            </script>
 
         </section>
 
