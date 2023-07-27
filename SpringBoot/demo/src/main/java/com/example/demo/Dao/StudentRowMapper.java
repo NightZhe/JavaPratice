@@ -22,5 +22,4 @@ public class StudentRowMapper implements RowMapper {
         return st;
 
     }
-
 }

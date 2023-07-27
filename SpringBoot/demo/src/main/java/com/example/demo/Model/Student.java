@@ -15,6 +15,8 @@ public class Student {
     private String email;
     private int payid;
     private String payName;
+    private int pageNum;
+    private int pageSize = 100000;
 
     public Student() {
 
@@ -128,6 +130,22 @@ public class Student {
 
     public void setPayName(String payName) {
         this.payName = payName;
+    }
+
+    public int getPageNum() {
+        return pageNum;
+    }
+
+    public void setPageNum(int pageNum) {
+        this.pageNum = pageNum;
+    }
+
+    public int getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize;
     }
 
 }

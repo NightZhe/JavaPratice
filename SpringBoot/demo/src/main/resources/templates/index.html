@@ -5,7 +5,13 @@
     <meta charset="UTF-8">
     <script src="js/main.js"></script>
     <link href="css/main.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/page.css">
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <!-- SimplePagination 連結 -->
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/simplePagination.js/1.6/jquery.simplePagination.min.js"></script>
+
 
 </head>
 
@@ -65,6 +71,7 @@
             <br />
             <table id=table class="listdata" border=1>
                 <tr>
+                    <td>序號</td>
                     <td>id</td>
                     <td>sno</td>
                     <td>sname</td>
@@ -75,7 +82,83 @@
                 </tr>
             </table>
             <hr>
+            <h1>分頁系統</h1>
+            <div id="list-wrapper"></div>
+            <!-- 項目 -->
+            <div class="list-item">
+                <p>1</p>
+            </div>
+            <div class="list-item">
+                <p>2</p>
+            </div>
+            <div class="list-item">
+                <p>3</p>
+            </div>
+            <div class="list-item">
+                <p>4</p>
+            </div>
+            <div class="list-item">
+                <p>5</p>
+            </div>
+            <div class="list-item">
+                <p>6</p>
+            </div>
+            <div class="list-item">
+                <p>7</p>
+            </div>
+            <div class="list-item">
+                <p>8</p>
+            </div>
+            <div class="list-item">
+                <p>9</p>
+            </div>
+            <div class="list-item">
+                <p>10</p>
+            </div>
+            <div class="list-item">
+                <p>11</p>
+            </div>
+            <div class="list-item">
+                <p>12</p>
+            </div>
+            <div class="list-item">
+                <p>13</p>
+            </div>
+            <div class="list-item">
+                <p>14</p>
+            </div>
+            <div class="list-item">
+                <p>15</p>
+            </div>
+            <div class="list-item">
+                <p>16</p>
+            </div>
+            <div class="list-item">
+                <p>17</p>
+            </div>
+
+
+
+            <div id="pagination-container"></div>
+
             <script>
+                // //每頁要顯示幾個項目
+                // var perPage = 2;
+                // //總共有多少個項目
+                // var numItems = $(".list-item").length;
+                // $(".list-item").slice(perPage).hide();
+                // $('#pagination-container').pagination({
+                //     items: numItems,
+                //     itemsOnPage: perPage,
+                //     prevText: "&laquo;",
+                //     nextText: "&raquo;",
+                //     onPageClick: function (pageNumber) {
+                //         from = perPage * (pageNumber - 1);
+                //         to = from + perPage;
+                //         $(".list-item").hide().slice(from, to).show();
+                //     }
+
+                // })
 
                 $(document).ready(function () {
                     $.ajax({
@@ -95,18 +178,16 @@
                     sno = $('#serchSno').val();
                     sname = $('#serchSname').val();
                     payMethod = $('#payMethod').val();
-                    console.log("payMethod: " + payMethod);
-                    console.log(sno);
-                    console.log(sname);
                     $.ajax({
-                        url: 'list',
+                        url: 'alllist',
                         type: 'post',
                         data: { sno: $('#serchSno').val(), sname: $('#serchSname').val(), payid: $('#payMethod').val() },
                         success: function (response) {
                             $(".tr").remove();
                             result = response.data;
                             for (i = 0; i < result.length; i++) {
-                                $(".listdata").append("<tr class='tr'><td>"
+                                $(".listdata").append("<tr class='trs'><td>"
+                                    + (i + 1) + "</td><td>"
                                     + result[i].id + "</td><td>"
                                     + result[i].sno + "</td><td>"
                                     + result[i].sname + "</td><td>"
@@ -115,8 +196,26 @@
                                     + "<a href='#' onclick=edit(" + result[i].id + ");> edit</a> </td >"
                                     + " <td><a href='#' onclick=del(" + result[i].id + ");>delete</a> </td ></tr > ")
                             }
+                            //每頁要顯示幾個項目
+                            var perPage = 2;
+                            //總共有多少個項目
+                            var numItems = $(".trs").length;
+                            $(".trs").slice(perPage).hide();
+                            $('#pagination-container').pagination({
+                                items: numItems,
+                                itemsOnPage: perPage,
+                                prevText: "&laquo;",
+                                nextText: "&raquo;",
+                                onPageClick: function (pageNumber) {
+                                    from = perPage * (pageNumber - 1);
+                                    to = from + perPage;
+                                    $(".trs").hide().slice(from, to).show();
+                                }
+                            })
                         }
                     });
+
+
                 };
 
                 function create() {

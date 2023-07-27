@@ -113,20 +113,16 @@ public class StudentDao {
 	}
 
 	public List<Student> list() {
-		StringBuffer sql = new StringBuffer();
-		sql.append(" select * from Student ");
-		sql.append(" where email = '123@gmail.com' ");
-		sql.append(" order by id DESC ");
 		String sql1 = "select * from STUDENT order by id DESC";
 		RowMapper rowMapper = new StudentRowMapper();
-		List<Student> allList = jdbcTemplate.query(sql1.toString(), rowMapper);
+		List<Student> allList = jdbcTemplate.query(sql1, rowMapper);
 
 		return allList;
 
 	}
 
 	public List<Student> list(Student student) {
-		Vector<String> params = new Vector<String>();
+		Vector<Object> params = new Vector<Object>();
 		StringBuffer sql = new StringBuffer();
 		sql.append("select id,sno,sname,payid,(");
 		sql.append(" select payname from paymethod ");
@@ -145,6 +141,13 @@ public class StudentDao {
 			sql.append(" and payid = ? ");
 			params.add(String.valueOf(student.getPayid()));
 			;
+		}
+		if (student.getPageNum() >= 0) {
+			sql.append(" limit ?,? ");
+			int PageNum = student.getPageNum();
+			int PageSize = student.getPageSize();
+			params.add(PageNum);
+			params.add(PageSize);
 		}
 
 		RowMapper<Student> rowMapper = new StudentRowMapper();

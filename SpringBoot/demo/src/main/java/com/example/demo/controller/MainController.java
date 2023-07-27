@@ -11,12 +11,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.Dao.StudentDao;
 import com.example.demo.Model.LogUtil;
 import com.example.demo.Model.Student;
 import com.example.demo.Service.StudentService;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -154,7 +157,7 @@ public class MainController {
 
     }
 
-    @RequestMapping("/list")
+    @RequestMapping("/alllist")
     @ResponseBody
     public Map<String, Object> getlist(Student student) {
         System.out.println("index:data sno :" + student.getSno());
@@ -194,6 +197,40 @@ public class MainController {
             map.put("message", "error");
         }
         return map;
+    }
+
+    @RequestMapping("/usermanage")
+    public String usermanage(Model model, Student student,
+            @RequestParam(required = false, defaultValue = "1", value = "pageNum") Integer pageNum,
+            @RequestParam(defaultValue = "5", value = "pageSize") Integer pageSize) {
+        if (pageNum == null) {
+            pageNum = 1; // 設置默認當前頁面
+        }
+        if (pageNum <= 0) {
+            pageNum = 1;
+        }
+        if (pageSize == null) {
+            pageSize = 5; // 設置默認每頁顯示數據
+        }
+        System.out.println("當前頁面:" + pageNum + "顯示條數是:" + pageSize);
+
+        // 1.引入分頁插件,pageNum 是第幾頁，pageSize 是每頁顯示多少條，默認查詢總數count
+        PageHelper.startPage(pageNum, pageSize);
+        // 2.緊跟著查詢就是一個分頁查詢-必須緊跟後面的其他查詢不會被分頁，除非再次調用pageHelper
+        try {
+            List<Student> studentList = studentService.list();
+            System.out.println("分頁數據：" + studentList);
+
+            PageInfo<Student> pageInfo = new PageInfo<Student>(studentList, pageSize);
+
+            model.addAttribute("pageINfo", pageInfo);
+
+        } finally {
+            PageHelper.clearPage();
+        }
+
+        return "list";
+
     }
 
 }
