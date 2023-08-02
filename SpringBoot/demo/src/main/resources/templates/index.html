@@ -183,7 +183,7 @@
                         type: 'post',
                         data: { sno: $('#serchSno').val(), sname: $('#serchSname').val(), payid: $('#payMethod').val() },
                         success: function (response) {
-                            $(".tr").remove();
+                            $(".trs").remove();
                             result = response.data;
                             for (i = 0; i < result.length; i++) {
                                 $(".listdata").append("<tr class='trs'><td>"
@@ -197,7 +197,7 @@
                                     + " <td><a href='#' onclick=del(" + result[i].id + ");>delete</a> </td ></tr > ")
                             }
                             //每頁要顯示幾個項目
-                            var perPage = 2;
+                            var perPage = 3;
                             //總共有多少個項目
                             var numItems = $(".trs").length;
                             $(".trs").slice(perPage).hide();
