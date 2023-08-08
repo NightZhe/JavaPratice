@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="/css/page.css">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-    <!-- SimplePagination 連結 -->
+    <!-- SimplePagination 連結  https://flaviusmatis.github.io/simplePagination.js/ -->
     <script
         src="https://cdnjs.cloudflare.com/ajax/libs/simplePagination.js/1.6/jquery.simplePagination.min.js"></script>
 
@@ -202,14 +202,15 @@
                             var numItems = $(".trs").length;
                             $(".trs").slice(perPage).hide();
                             $('#pagination-container').pagination({
-                                items: numItems,
-                                itemsOnPage: perPage,
+                                items: numItems,        //總數
+                                itemsOnPage: perPage,   //當前頁數筆數
                                 prevText: "&laquo;",
                                 nextText: "&raquo;",
+
                                 onPageClick: function (pageNumber) {
-                                    from = perPage * (pageNumber - 1);
-                                    to = from + perPage;
-                                    $(".trs").hide().slice(from, to).show();
+                                    from = perPage * (pageNumber - 1); //從第幾筆開始 ＝ 當前筆數*(頁碼-1)   ex:0,3(2-1),
+                                    to = from + perPage;               //到底幾筆 = 從第幾筆開始+比數        ex:3,3+3
+                                    $(".trs").hide().slice(from, to).show();  //sliec(切片)(0,3) 實際上只會算到 (0,3-1)也就是前三筆，後面依此類推。(3,6)實際上(3,6-1) (3,4,5)儲存的位子 (4,5,6)值
                                 }
                             })
                         }
@@ -233,6 +234,8 @@
                     getprop = $("[name='bbb']").val();
                     console.log(getprop);
                 }
+
+
             </script>
 
         </section>
