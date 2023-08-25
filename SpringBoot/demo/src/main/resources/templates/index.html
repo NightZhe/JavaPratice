@@ -82,7 +82,8 @@
                 </tr>
             </table>
             <hr>
-            <h1>分頁系統</h1>
+            <h1>分頁系統 </h1>
+
             <div id="list-wrapper"></div>
             <!-- 項目 -->
             <div class="list-item">
@@ -197,7 +198,7 @@
                                     + " <td><a href='#' onclick=del(" + result[i].id + ");>delete</a> </td ></tr > ")
                             }
                             //每頁要顯示幾個項目
-                            var perPage = 3;
+                            var perPage = 10;
                             //總共有多少個項目
                             var numItems = $(".trs").length;
                             $(".trs").slice(perPage).hide();
