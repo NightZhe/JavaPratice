@@ -25,7 +25,7 @@ public interface StudentService {
 
     public Boolean createTable(); // 創建資料庫表格
 
-    public List<Student> list();// 查詢學生全部的list;
+    public List<Student> allList();// 查詢學生全部的list;
 
     public List<Student> list(Student student); // 有條件查詢
 

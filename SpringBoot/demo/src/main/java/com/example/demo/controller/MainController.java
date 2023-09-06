@@ -199,38 +199,17 @@ public class MainController {
         return map;
     }
 
-    @RequestMapping("/usermanage")
-    public String usermanage(Model model, Student student,
-            @RequestParam(required = false, defaultValue = "1", value = "pageNum") Integer pageNum,
-            @RequestParam(defaultValue = "5", value = "pageSize") Integer pageSize) {
-        if (pageNum == null) {
-            pageNum = 1; // 設置默認當前頁面
-        }
-        if (pageNum <= 0) {
-            pageNum = 1;
-        }
-        if (pageSize == null) {
-            pageSize = 5; // 設置默認每頁顯示數據
-        }
-        System.out.println("當前頁面:" + pageNum + "顯示條數是:" + pageSize);
-
-        // 1.引入分頁插件,pageNum 是第幾頁，pageSize 是每頁顯示多少條，默認查詢總數count
-        PageHelper.startPage(pageNum, pageSize);
-        // 2.緊跟著查詢就是一個分頁查詢-必須緊跟後面的其他查詢不會被分頁，除非再次調用pageHelper
+    @RequestMapping("/concatColumn")
+    @ResponseBody
+    public List getConcateList() {
+        List concatList = studentService.allList();
         try {
-            List<Student> studentList = studentService.list();
-            System.out.println("分頁數據：" + studentList);
-
-            PageInfo<Student> pageInfo = new PageInfo<Student>(studentList, pageSize);
-
-            model.addAttribute("pageINfo", pageInfo);
-
-        } finally {
-            PageHelper.clearPage();
+            if (concatList != null) {
+                return concatList;
+            }
+        } catch (Exception e) {
+            System.out.println(e);
         }
-
-        return "list";
-
+        return null;
     }
-
 }

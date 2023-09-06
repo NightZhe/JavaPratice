@@ -112,12 +112,13 @@ public class StudentDao {
 
 	}
 
-	public List<Student> list() {
-		String sql1 = "select * from STUDENT order by id DESC";
-		RowMapper rowMapper = new StudentRowMapper();
-		List<Student> allList = jdbcTemplate.query(sql1, rowMapper);
+	public List<Student> allList() {
+		String sql1 = "select * from STUDENT";
 
-		return allList;
+		RowMapper<Student> rowMapper = new ConcatRowMapper();
+		List<Student> conList = jdbcTemplate.query(sql1, rowMapper);
+
+		return conList;
 
 	}
 

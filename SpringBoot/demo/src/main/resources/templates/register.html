@@ -21,6 +21,18 @@
 	</form>
 	<label th:text="${message}">返回信息</label>
 
+	<button type="button" onclick="search()">查詢</button>
+
+	<table id=table class="listdata" border=1>
+		<tr>
+			<td>序號</td>
+			<td>id</td>
+			<td>sno</td>
+			<td>sname</td>
+			<td>edit</td>
+			<td>delete</td>
+		</tr>
+	</table>
 
 
 	<div class="news"></div>
@@ -77,6 +89,26 @@
 			return reg.test(email);
 		}
 
+
+		function search() {
+			$.ajax({
+				url: 'concatColumn',
+				type: 'post',
+				success: function (response) {
+					$(".trs").remove();
+					result = response;
+					for (i = 0; i < result.length; i++) {
+						$(".listdata").append("<tr class='trs'><td>"
+							+ (i + 1) + "</td><td>"
+							+ result[i].id + "</td><td>"
+							+ result[i].sno + "</td><td>"
+							+ result[i].sname + "</td><td>"
+							+ "<a href='#' onclick=edit(" + result[i].id + ");> edit</a> </td >"
+							+ " <td><a href='#' onclick=del(" + result[i].id + ");>delete</a> </td ></tr > ")
+					}
+				}
+			})
+		}
 
 	</script>
 
