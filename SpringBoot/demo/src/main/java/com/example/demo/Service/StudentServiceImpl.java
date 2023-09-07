@@ -95,7 +95,18 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public List<Student> allList() {
-        return studentDao.allList();
+        List concatList = studentDao.allList();
+        for (int i = 0; i < concatList.size(); i++) {
+            Object elemnets = concatList.get(i);
+            Student st = (Student) elemnets;
+            if (st.getSage() != 0) {
+                st.setSname(st.getSname().concat(";").concat(Integer.toString(st.getSage())));
+
+            }
+            System.out.println(concatList.get(i));
+        }
+
+        return concatList;
     }
 
     @Override
