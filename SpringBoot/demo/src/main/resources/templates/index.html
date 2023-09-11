@@ -85,83 +85,22 @@
             <hr>
             <h1>分頁系統 </h1>
 
-            <div id="list-wrapper"></div>
-            <!-- 項目 -->
-            <div class="list-item">
-                <p>1</p>
-            </div>
-            <div class="list-item">
-                <p>2</p>
-            </div>
-            <div class="list-item">
-                <p>3</p>
-            </div>
-            <div class="list-item">
-                <p>4</p>
-            </div>
-            <div class="list-item">
-                <p>5</p>
-            </div>
-            <div class="list-item">
-                <p>6</p>
-            </div>
-            <div class="list-item">
-                <p>7</p>
-            </div>
-            <div class="list-item">
-                <p>8</p>
-            </div>
-            <div class="list-item">
-                <p>9</p>
-            </div>
-            <div class="list-item">
-                <p>10</p>
-            </div>
-            <div class="list-item">
-                <p>11</p>
-            </div>
-            <div class="list-item">
-                <p>12</p>
-            </div>
-            <div class="list-item">
-                <p>13</p>
-            </div>
-            <div class="list-item">
-                <p>14</p>
-            </div>
-            <div class="list-item">
-                <p>15</p>
-            </div>
-            <div class="list-item">
-                <p>16</p>
-            </div>
-            <div class="list-item">
-                <p>17</p>
-            </div>
-
-
-
             <div id="pagination-container"></div>
+            <button type="submit" id="modifyStatus" onclick="changeStatus()">變更狀態</button>
+            <table id=productTable class="productdata" border=1>
+                <tr>
+                    <td>pid</td>
+                    <td>pno</td>
+                    <td>pname</td>
+                    <td>pprice</td>
+                    <td>status</td>
+                    <td>statusNC</td>
+                    <td>操作</td>
+                </tr>
+
+            </table>
 
             <script>
-                // //每頁要顯示幾個項目
-                // var perPage = 2;
-                // //總共有多少個項目
-                // var numItems = $(".list-item").length;
-                // $(".list-item").slice(perPage).hide();
-                // $('#pagination-container').pagination({
-                //     items: numItems,
-                //     itemsOnPage: perPage,
-                //     prevText: "&laquo;",
-                //     nextText: "&raquo;",
-                //     onPageClick: function (pageNumber) {
-                //         from = perPage * (pageNumber - 1);
-                //         to = from + perPage;
-                //         $(".list-item").hide().slice(from, to).show();
-                //     }
-
-                // })
-
                 $(document).ready(function () {
                     $.ajax({
                         url: 'paydownselect',
@@ -170,6 +109,25 @@
                             result = response.data;
                             for (i = 0; i < result.length; i++) {
                                 $("#payMethod").append("<option value=" + result[i].id + ">" + result[i].payname + "</option>");
+                            }
+                        }
+                    })
+                    $.ajax({
+                        url: 'product',
+                        type: 'post',
+                        success: function (response) {
+                            result = response;
+                            for (i = 0; i < result.length; i++) {
+                                $(".productdata").append("<tr  class='producttb'><td>"
+                                    + result[i].pid + "</td><td>"
+                                    + result[i].pno + "</td><td>"
+                                    + result[i].pname + "</td><td>"
+                                    + result[i].pprice + "</td><td>"
+                                    + result[i].status + "</td><td>"
+                                    + result[i].statusNC + "</td><td>"
+                                    // + "<button type='submit' onclick=changeStatus(" + result[i].pid, result[i].status + ");>變更狀態 </button> </td></tr>"
+                                    + "<button type='submit' onclick=changeStatus(" + result[i].status + "," + result[i].pid + ") > 變更狀態</button> </td></tr>"
+                                )
                             }
                         }
                     })
@@ -236,6 +194,22 @@
                     $("[name='bbb']").val("gggggh123234544");
                     getprop = $("[name='bbb']").val();
                     console.log(getprop);
+                }
+                function changeStatus(status, pid) {
+                    $.ajax({
+                        url: 'changeStatus',
+                        type: 'post',
+                        data: { status, pid },
+                        success: function (response) {
+                            alert("狀態修改為" + status)
+                            window.location.reload();
+                        },
+                        error: function () {
+                            alert("修改失敗")
+                        }
+
+
+                    })
                 }
 
 

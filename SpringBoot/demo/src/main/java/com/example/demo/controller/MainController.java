@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.Dao.StudentDao;
 import com.example.demo.Model.LogUtil;
+import com.example.demo.Model.Product;
 import com.example.demo.Model.Student;
+import com.example.demo.Service.ProductService;
 import com.example.demo.Service.StudentService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -34,6 +36,12 @@ public class MainController {
 
     @Autowired
     StudentService studentService;
+
+    @Autowired
+    Product product;
+
+    @Autowired
+    ProductService productService;
 
     // 跳轉註冊
     @RequestMapping("/register")
@@ -211,5 +219,37 @@ public class MainController {
             System.out.println(e);
         }
         return null;
+    }
+
+    @RequestMapping("/product")
+    @ResponseBody
+    public List getProductList() {
+        List productList = productService.allList();
+        try {
+            if (productList != null) {
+                return productList;
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return null;
+    }
+
+    @RequestMapping("/changeStatus")
+    @ResponseBody
+    public String changeStatus(Product product) {
+        System.out.println("changeStatus從前端抓取到的狀態:" + product.getStatus());
+        System.out.println("pid:" + product.getPid());
+        int status = product.getStatus();
+        // 建置~完成
+        if (status < 2) {
+            status += 1;
+            product.setStatus(status);
+            productService.changestatus(product);
+        }
+        // 完成2
+        productService.changestatus(product);
+        return "index";
+
     }
 }

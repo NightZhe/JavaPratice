@@ -1,5 +1,8 @@
 package com.example.demo.Model;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class PayName {
     private int id;
     private String payname;
