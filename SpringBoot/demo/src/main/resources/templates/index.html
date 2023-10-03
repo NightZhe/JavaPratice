@@ -135,7 +135,6 @@
 
 
                 function search() {
-                    debugger;
                     sno = $('#serchSno').val();
                     sname = $('#serchSname').val();
                     payMethod = $('#payMethod').val();
@@ -158,7 +157,7 @@
                                     + " <td><a href='#' onclick=del(" + result[i].id + ");>delete</a> </td ></tr > ")
                             }
                             //每頁要顯示幾個項目
-                            var perPage = 10;
+                            var perPage = 3;
                             //總共有多少個項目
                             var numItems = $(".trs").length;
                             $(".trs").slice(perPage).hide();

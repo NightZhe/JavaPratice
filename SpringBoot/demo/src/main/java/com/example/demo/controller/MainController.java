@@ -53,6 +53,7 @@ public class MainController {
     // 跳轉忘記密碼頁面
     @RequestMapping("/forget")
     public String forget(Model model) {
+        LogUtil.w("success", "成功跳轉");
         return "fpd";
     }
 
