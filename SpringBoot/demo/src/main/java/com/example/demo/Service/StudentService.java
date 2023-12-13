@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.mail.MessagingException;
 
+import com.example.demo.Model.ListDate;
 import com.example.demo.Model.PayName;
 import com.example.demo.Model.Student;
 
@@ -30,5 +31,7 @@ public interface StudentService {
     public List<Student> list(Student student); // 有條件查詢
 
     public List<PayName> payList();// 付款方式List
+
+    public Boolean saveOption(List<ListDate> dateArray);
 
 }

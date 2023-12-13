@@ -8,13 +8,17 @@ import java.util.Map;
 import javax.mail.MessagingException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.Dao.StudentDao;
+import com.example.demo.Model.ListDate;
 import com.example.demo.Model.LogUtil;
 import com.example.demo.Model.Product;
 import com.example.demo.Model.Student;
@@ -42,6 +46,9 @@ public class MainController {
 
     @Autowired
     ProductService productService;
+
+    @Autowired
+    ListDate listdate;
 
     // 跳轉註冊
     @RequestMapping("/register")
@@ -169,13 +176,13 @@ public class MainController {
     @RequestMapping("/alllist")
     @ResponseBody
     public Map<String, Object> getlist(Student student) {
-        System.out.println("index:data sno :" + student.getSno());
-        System.out.println("index:data sname :" + student.getSname());
         Map<String, Object> map = new HashMap<String, Object>();
         List<Student> list = studentService.list(student);
+        List payList = studentService.payList();
         if (list != null) {
             map.put("staus", "200");
             map.put("data", list);
+            map.put("date2", payList);
             map.put("message", "success");
             return map;
         } else {
@@ -250,7 +257,19 @@ public class MainController {
         }
         // 完成2
         productService.changestatus(product);
-        return "index";
+        return "information";
 
     }
+
+    @RequestMapping("/save")
+    public ResponseEntity<String> saveData(@RequestBody List<ListDate> dateArray) {
+        boolean stauus = studentService.saveOption(dateArray);
+        if (stauus) {
+            return new ResponseEntity<>("数据保存成功", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("失敗", HttpStatus.NOT_FOUND);
+        }
+
+    }
+
 }

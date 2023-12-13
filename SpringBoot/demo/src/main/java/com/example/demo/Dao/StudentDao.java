@@ -1,15 +1,19 @@
 package com.example.demo.Dao;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Vector;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
 import org.springframework.stereotype.Repository;
 
+import com.example.demo.Model.ListDate;
 import com.example.demo.Model.PayName;
 import com.example.demo.Model.Student;
 
@@ -126,7 +130,7 @@ public class StudentDao {
 		Vector<Object> params = new Vector<Object>();
 		StringBuffer sql = new StringBuffer();
 		sql.append("select id,sno,sname,payid,(");
-		sql.append(" select payname from paymethod ");
+		sql.append(" select payname from payMethod ");
 		sql.append(" where id = student.payid ) as PAYCNAME");
 		sql.append(" from student ");
 		sql.append(" where 1=1 ");
@@ -153,17 +157,44 @@ public class StudentDao {
 
 		RowMapper<Student> rowMapper = new StudentRowMapper();
 
-		List<Student> allList = jdbcTemplate.query(sql.toString(), rowMapper, params.toArray());
-		return allList;
+		List<Student> selctList = jdbcTemplate.query(sql.toString(), rowMapper, params.toArray());
+		return selctList;
 
 	}
 
 	public List<PayName> payList() {
 		RowMapper<PayName> rowMapper = new PayNameRowMapper();
-		String sql = "select * from paymethod";
+		String sql = " select id,concat(id,'_',payname)as payname from paymethod ";
 
 		List<PayName> payList = jdbcTemplate.query(sql, rowMapper);
 		return payList;
+	}
+
+	public Boolean batchUpdate(List<ListDate> dataArray) {
+
+		try {
+			String sql = "UPDATE STUDENT SET payid = ? where id = ? ";
+			jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+
+				@Override
+				public void setValues(PreparedStatement ps, int i) throws SQLException {
+					ListDate listDate = dataArray.get(i);
+					ps.setString(1, listDate.getSelectOption());
+					ps.setString(2, listDate.getId());
+				}
+
+				@Override
+				public int getBatchSize() {
+					return (dataArray.size());
+				}
+
+			});
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+
 	}
 
 }

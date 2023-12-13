@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 import com.example.demo.Dao.StudentDao;
 import com.example.demo.Model.JavaMail;
+import com.example.demo.Model.ListDate;
 import com.example.demo.Model.PayName;
 import com.example.demo.Model.Student;
 
@@ -117,5 +118,15 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public List<PayName> payList() {
         return studentDao.payList();
+    }
+
+    @Override
+    public Boolean saveOption(List<ListDate> dateArray) {
+        // for (ListDate list : dateArray) {
+        // System.out.println("ID:" + list.getId() + "," + "selecOption:" +
+        // list.getSelectOption());
+        // }
+        return studentDao.batchUpdate(dateArray);
+
     }
 }
