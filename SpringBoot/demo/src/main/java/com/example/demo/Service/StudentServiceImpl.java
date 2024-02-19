@@ -129,4 +129,23 @@ public class StudentServiceImpl implements StudentService {
         return studentDao.batchUpdate(dateArray);
 
     }
+
+    @Override
+    public Boolean upadteAccountStatus(int id, String sname, String status) {
+        if (status.equals("停用")) {
+            status = "啟用";
+            Boolean resutl = studentDao.upadteAccountStatus(id, status);
+            return resutl;
+        } else if (status.equals("啟用")) {
+            status = "停用";
+            Boolean result = studentDao.upadteAccountStatus(id, status);
+            return result;
+        }
+        return null;
+
+    }
+
+    public List<Student> searchNameProcedure(String Sname) {
+        return (studentDao.searchNameProcedure(Sname));
+    }
 }

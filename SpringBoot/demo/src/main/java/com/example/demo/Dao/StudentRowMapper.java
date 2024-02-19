@@ -19,6 +19,7 @@ public class StudentRowMapper implements RowMapper {
         st.setSname(rs.getString("sname"));
         st.setPayid(rs.getInt("payid"));
         st.setPayName(rs.getString("PAYCNAME"));
+        st.setStatus(rs.getString("status"));
         return st;
 
     }

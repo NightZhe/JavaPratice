@@ -6,15 +6,16 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class Student {
+    @Nullable
     private int id;
     private String sno;
     private String sname;
-    @Nullable
     private int sage;
     private String password;
     private String email;
     private int payid;
     private String payName;
+    private String status;
     private int pageNum;
     private int pageSize = 100000;
 
@@ -146,6 +147,14 @@ public class Student {
 
     public void setPageSize(int pageSize) {
         this.pageSize = pageSize;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
 }

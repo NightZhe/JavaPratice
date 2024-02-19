@@ -26,21 +26,32 @@
         </nav>
     </header>
     <main>
+        <p>Go to <a href="hello">hello.html</a></p>
+        <p>Go to <a href="hello?lang=en_US">hello.html(en_US)</a></p>
+        <p>Go to <a href="hello?lang=zh_TW">hello.html(zh_TW)</a></p>
+        <p>Go to <a href="hello?lang=ja_JP">hello.html(ja_JP)</a></p>
+
+        <a href="index?lang=en_US">English</a>
+        <a href="index?lang=zh_TW">中文</a>
+
         <section>
-            <h1>Welcome to my website!</h1>
-            <form action="login" method="post">
-                <label>帳號</label>
-                <input type="text" name="sname" id="sname"></intpu><br />
+            <h1 th:text="#{message.welcom}"></h1>
+            <form action=" login" method="post">
+                <label th:text="帳號"></label>
+                <input type="text" name="sname"> <br />
                 <label>密碼</label>
-                <input style="width:50px;" type="text" name="password" id="password"><br /><br />
-                <div>asdfsadf</div>
+                <input style="width:50px;" type="text" name="password"><br /><br />
+
 
                 <button type="submit" name="submit" id="enter">登入</button>
             </form>
 
-            <label th:text="${message}">返回信息</label> <br />
+            <form action="creatTable" method="post">
+                <button type="submit">創建表個資料</button>
+            </form>
 
-            <label th:text="${message1}">創建資料庫表個信息</label> <br />
+            <div th:text="${message}"> 返回信息</div> <br />
+            <label th:text="${message1}"> 創建資料庫表個信息</label> <br />
 
             <button type="submit" name="register" onclick="location.href='register'" id="register">註冊</button>
             <button type="submit" name="forgetpassword" id="forgetpassword"
@@ -51,8 +62,9 @@
             支付方式<select id="payMethod">
                 <option value="0">全選</option>
             </select>
-            <button type="submit" name="查詢表格" id="searchData" onclick=search();>搜索</button> <br />
-
+            <button type="submit" name="查詢表格" id="searchData" onclick=search();>搜索</button>
+            <button type="submit" name='serarchNameprecedure' id="serarchNameprecedure"
+                onclick=getSearchNameProcedure();>procedure查詢</button><br />
             <table border="2">
                 <tr>
                     <td>dsfsadfasdf</td>
@@ -69,24 +81,40 @@
             <input type="text" property="aaa" name="bbb" value="">測試property
             <button type="submit" id="getproperty" onclick=getproperty()>獲取property</button>
             <button type="submit" id="delAndupdate" onclick=save()>儲存</button>
-
-            <br />
+            <button type="submit" id="stop" onclick=stop()>停用</button>
+            <button type="submit" id="start" onclick=start()>啟用</button>
+            </br>
+            </br>
+            </br>
             <table id=table class="listdata" border=1>
                 <tr>
                     <td>序號</td>
+                    <td>單選</td>
                     <td>id</td>
                     <td>sno</td>
                     <td>sname</td>
                     <td>payid</td>
                     <td>payName</td>
+                    <td>status</td>
+                    <td>edit</td>
+                    <td>delete</td>
+                </tr>
+            </table>
+            <table id=table class="procedure" border=1>
+                <tr>
+                    <td>序號</td>
+                    <td>id</td>
+                    <td>name</td>
+                    <td>password</td>
+                    <td>email</td>
                     <td>edit</td>
                     <td>delete</td>
                 </tr>
             </table>
             <hr>
-            <h1>分頁系統 </h1>
-
+            <h1>分頁</h1>
             <div id="pagination-container"></div>
+
             <button type="submit" id="modifyStatus" onclick="changeStatus()">變更狀態</button>
             <table id=productTable class="productdata" border=1>
                 <tr>
@@ -122,10 +150,115 @@
             <button type="button" id="atme">點我改變ddl直</button>
 
 
+            <select id="color" name="color">
+                <!-- 靜態選項 -->
+                <option value="red">Red</option>
+                <option value="green">Green</option>
+                <option value="blue">Blue</option>
+
+            </select>
+
+
+            <button type="submit" onclick=getselectcolor()>獲取選擇顏色按鈕</button>
+            <input type="text" naem="oodd"> oodd
+            <button type="submit" onclick="ceheckEmpty()">確認是否為空值</button>
+
+
+
+
+
             <script>
+                function getSearchNameProcedure() {
+                    $(".trs").remove();
+                    var searchsname = $('#serchSname').val();
+                    $.ajax({
+                        url: "/serarch/procedure",
+                        method: 'post',
+                        data: { searchsname },
+                        success: function (result) {
+                            states = result.states;
+                            if (states != "200") {
+
+                            }
+                            result = result.data;
+                            for (i = 0; i < result.length; i++) {
+                                $(".procedure").append("<tr class='trs'><td>"
+                                    + (i + 1) + "</td><td>"
+                                    + result[i].id + "</td><td>"
+                                    + result[i].name + "</td><td>"
+                                    + result[i].password + "</td><td class='ddltd'>"
+                                    + result[i].email + "</td><td>"
+                                    + "<a href='#' onclick=edit(" + result[i].id + ");> edit</a> </td > "
+                                    + " <td><a href='#' onclick=del(" + result[i].id + ");>delete</a> </td ></tr > ")
+                            }
+
+                        },
+                        error: function (result) {
+                            alert("獲取失敗");
+                        }
+
+
+                    })
+                }
+
+
+
+
+                function ceheckEmpty() {
+                    var oodd = $('[name=oodd]').val();
+                    if (oodd == null) {
+                        console.log("isEmpty")
+                    } else {
+                        console.log("is not Empty")
+
+                    }
+                }
+                function getselectcolor() {
+                    var colorValue = $('#color').val();
+                    fetch('color/select', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ "color": colorValue })
+                    }).then(response => response.json())
+                        .then(data => {
+                            console.log('Response from server:', data);
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        });
+                }
+
+
+
+                function stop() {
+                    // var $row = $('#table > tbody > .trs:has(:radio[name=radioselect]:checked)')//也可以這樣寫
+                    var $row = $('#table > tbody > .trs:has(input[name=radioselect]:checked)')
+                    $row.each(function () {
+                        var sname = $(this).find('input[name=sname]').val();
+                        var status = $(this).find('input[name=status]').val();
+                        var id = $(this).find('input[name=radioselect]').val();
+                        $.ajax({
+                            url: 'accountstatus',
+                            data: { id, sname, status },
+                            success: function (result) {
+                                result = result.message
+                                alert("result: " + result.success);
+                            },
+                            error: function () {
+                                alert("result: " + result);
+                            }
+
+                        })
+                        alert("sname: " + sname + " , " + "status: " + status + " , " + "id: " + id);
+                    })
+                }
+                function start() {
+
+                }
 
                 function save() {
-                    var dateArray = [];
+                    var dataArray = [];
+
                     $('.trs').each(function () {
                         var idElement = $(this).find('td:nth-child(2)')
                         var selectElement = $(this).find('.ddl');
@@ -135,15 +268,20 @@
                             id: idValue,
                             selectOption: selectValue
                         };
-                        dateArray.push(dateToSend);
+
+                        dataArray.push(dateToSend)
+
                     })
-                    console.log("JSon dateArray: " + JSON.stringify(dateArray));
+                    console.log(dataArray);
+
+                    console.log("JSon dateArray: " + JSON.stringify(dataArray));
+
 
                     $.ajax({
                         url: 'save',
                         type: 'post',
                         contentType: 'application/json',
-                        data: JSON.stringify(dateArray),
+                        data: JSON.stringify(dataArray),
                         success: function (result) {
                             alert(result);
                             search()
@@ -235,33 +373,37 @@
                                 }).join('');
                                 $(".listdata").append("<tr class='trs'><td>"
                                     + (i + 1) + "</td><td>"
+                                    + "<input type='radio' name='radioselect' value=" + result[i].id + ">"
+                                    + "<input type='hidden' name='sname' value=" + result[i].sname + ">"
+                                    + "<input type='hidden' name='status' value=" + result[i].status + "></td><td>"
                                     + result[i].id + "</td><td>"
                                     + result[i].sno + "</td><td>"
                                     + result[i].sname + "</td><td>"
                                     + result[i].payid + "</td><td class='ddltd'>"
                                     + "<select class='ddl'>" + dropdownOptions + " </select > </td > <td>" // 塞入下拉式選單
+                                    + result[i].status + "</td><td>"
                                     + "<a href='#' onclick=edit(" + result[i].id + ");> edit</a> </td > "
                                     + " <td><a href='#' onclick=del(" + result[i].id + ");>delete</a> </td ></tr > ")
                             }
 
 
-                            // //每頁要顯示幾個項目
-                            // var perPage = 3;
-                            // //總共有多少個項目
-                            // var numItems = $(".trs").length;
-                            // $(".trs").slice(perPage).hide();
-                            // $('#pagination-container').pagination({
-                            //     items: numItems,        //總數
-                            //     itemsOnPage: perPage,   //當前頁數筆數
-                            //     prevText: "&laquo;",
-                            //     nextText: "&raquo;",
+                            //每頁要顯示幾個項目
+                            var perPage = 10;
+                            //總共有多少個項目
+                            var numItems = $(".trs").length;
+                            $(".trs").slice(perPage).hide();
+                            $('#pagination-container').pagination({
+                                items: numItems,        //總數
+                                itemsOnPage: perPage,   //當前頁數筆數
+                                prevText: "&laquo;",
+                                nextText: "&raquo;",
 
-                            //     onPageClick: function (pageNumber) {
-                            //         from = perPage * (pageNumber - 1); //從第幾筆開始 ＝ 當前筆數*(頁碼-1)   ex:0,3(2-1),
-                            //         to = from + perPage;               //到底幾筆 = 從第幾筆開始+比數        ex:3,3+3
-                            //         $(".trs").hide().slice(from, to).show();  //sliec(切片)(0,3) 實際上只會算到 (0,3-1)也就是前三筆，後面依此類推。(3,6)實際上(3,6-1) (3,4,5)儲存的位子 (4,5,6)值
-                            //     }
-                            // })
+                                onPageClick: function (pageNumber) {
+                                    from = perPage * (pageNumber - 1); //從第幾筆開始 ＝ 當前筆數*(頁碼-1)   ex:0,10(2-1),
+                                    to = from + perPage;               //到底幾筆 = 從第幾筆開始+比數        ex:3,3+3
+                                    $(".trs").hide().slice(from, to).show();  //sliec(切片)(0,3) 實際上只會算到 (0,3-1)也就是前三筆，後面依此類推。(3,6)實際上(3,6-1) (3,4,5)儲存的位子 (4,5,6)值
+                                }
+                            })
                         }
                     });
                 };
@@ -310,11 +452,6 @@
 
                     })
                 }
-
-
-
-
-
                 var date1 = "112/12/15"
                 var year = date1.substr(0, 3);
                 StringtoInt = parseInt(year);
@@ -338,60 +475,6 @@
                 }
 
             </script>
-            <tr class="trclass">
-                <td><select name="mySelect">
-                        <option value="10">Option 1</option>
-                        <option value="11">Option 2</option>
-                        <option value="12">Option 3</option>
-                    </select></td>
-                <td><select name="mySelect">
-                        <option value="10">Option 1</option>
-                        <option value="11">Option 2</option>
-                        <option value="12">Option 3</option>
-                    </select></td>
-                <td><select name="mySelect">
-                        <option value="10">Option 1</option>
-                        <option value="11">Option 2</option>
-                        <option value="12">Option 3</option>
-                    </select></td>
-                <td><select name="mySelect">
-                        <option value="10">Option 1</option>
-                        <option value="11">Option 2</option>
-                        <option value="12">Option 3</option>
-                    </select></td>
-                <td><select name="mySelect">
-                        <option value="10">Option 1</option>
-                        <option value="11">Option 2</option>
-                        <option value="12">Option 3</option>
-                    </select></td>
-                <td><select name="mySelect">
-                        <option value="10">Option 1</option>
-                        <option value="11">Option 2</option>
-                        <option value="12">Option 3</option>
-                    </select></td>
-                <td><select name="mySelect">
-                        <option value="10">Option 1</option>
-                        <option value="11">Option 2</option>
-                        <option value="12">Option 3</option>
-                    </select></td>
-                <td><select name="mySelect">
-                        <option value="10">Option 1</option>
-                        <option value="11">Option 2</option>
-                        <option value="12">Option 3</option>
-                    </select></td>
-            </tr>
-
-            <button type="button" onclick="getoption()">得到option Value</button>
-
-            <script>
-                function getoption() {
-                    $('.trclass').each(function () {
-                        var selectByName = $('select[name="mySelect"]');
-                        console.log(selectByName.val()); // 获取选中的值
-                    })
-                }
-            </script>
-
 
         </section>
 

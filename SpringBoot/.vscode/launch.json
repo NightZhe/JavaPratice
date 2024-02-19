@@ -2,6 +2,27 @@
     "configurations": [
         {
             "type": "java",
+            "name": "fubon",
+            "request": "launch",
+            "mainClass": "com.example.demo.controller.fubon",
+            "projectName": "demo"
+        },
+        {
+            "type": "java",
+            "name": "Solution",
+            "request": "launch",
+            "mainClass": "com.example.demo.controller.Solution",
+            "projectName": "demo"
+        },
+        {
+            "type": "java",
+            "name": "MainController",
+            "request": "launch",
+            "mainClass": "com.example.demo.controller.MainController",
+            "projectName": "demo"
+        },
+        {
+            "type": "java",
             "name": "test",
             "request": "launch",
             "mainClass": "com.example.demo.controller.test",

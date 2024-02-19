@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.mail.MessagingException;
 
+import org.apache.ibatis.ognl.BooleanExpression;
+
 import com.example.demo.Model.ListDate;
 import com.example.demo.Model.PayName;
 import com.example.demo.Model.Student;
@@ -33,5 +35,9 @@ public interface StudentService {
     public List<PayName> payList();// 付款方式List
 
     public Boolean saveOption(List<ListDate> dateArray);
+
+    public Boolean upadteAccountStatus(int id, String sname, String status); // 修改學生帳號停用啟用
+
+    public List<Student> searchNameProcedure(String sname);
 
 }

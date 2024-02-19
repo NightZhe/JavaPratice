@@ -11,6 +11,10 @@ public class ListDate {
         super();
     }
 
+    public String ListDate(String Object) {
+        return Object;
+    }
+
     public ListDate(String id, String selectOption) {
         this.id = id;
         this.selectOption = selectOption;

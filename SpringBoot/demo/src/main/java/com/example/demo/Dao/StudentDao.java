@@ -1,8 +1,10 @@
 package com.example.demo.Dao;
 
+import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -112,7 +114,7 @@ public class StudentDao {
 			System.out.println(e);
 			return false;
 		}
-		return true;
+		return false;
 
 	}
 
@@ -126,40 +128,53 @@ public class StudentDao {
 
 	}
 
+	/**
+	 * @param student
+	 * @return
+	 */
 	public List<Student> list(Student student) {
-		Vector<Object> params = new Vector<Object>();
-		StringBuffer sql = new StringBuffer();
-		sql.append("select id,sno,sname,payid,(");
-		sql.append(" select payname from payMethod ");
-		sql.append(" where id = student.payid ) as PAYCNAME");
-		sql.append(" from student ");
-		sql.append(" where 1=1 ");
-		if (student.getSname() != "") {
-			sql.append(" and sname like ? ");
-			params.add(student.getSname() + "%");
-		}
-		if (student.getSno() != "") {
-			sql.append(" and sno = ? ");
-			params.add(student.getSno());
-		}
-		if (student.getPayid() != 0) {
-			sql.append(" and payid = ? ");
-			params.add(String.valueOf(student.getPayid()));
-			;
-		}
-		if (student.getPageNum() >= 0) {
-			sql.append(" limit ?,? ");
-			int PageNum = student.getPageNum();
-			int PageSize = student.getPageSize();
-			params.add(PageNum);
-			params.add(PageSize);
+
+		try {
+			Vector<Object> params = new Vector<Object>();
+			StringBuffer sql = new StringBuffer();
+			sql.append("select id,sno,sname,payid,(");
+			sql.append(" select payname from payMethod ");
+			sql.append(" where id = student.payid ) as PAYCNAME,");
+			sql.append("  status ");
+			sql.append(" from student ");
+			sql.append(" where 1=1 ");
+			if (student.getSname() != "") {
+				sql.append(" and sname like ? ");
+				params.add(student.getSname() + "%");
+			}
+			if (student.getSno() != "") {
+				sql.append(" and sno = ? ");
+				params.add(student.getSno());
+			}
+			if (student.getPayid() != 0) {
+				sql.append(" and payid = ? ");
+				params.add(String.valueOf(student.getPayid()));
+				;
+			}
+			if (student.getPageNum() >= 0) {
+				sql.append(" limit ?,? ");
+				int PageNum = student.getPageNum();
+				int PageSize = student.getPageSize();
+				params.add(PageNum);
+				params.add(PageSize);
+			}
+
+			// RowMapper<Student> rowMapper = new StudentRowMapper();
+
+			// selctList = jdbcTemplate.query(sql.toString(), rowMapper, params.toArray());
+			List result = jdbcTemplate.queryForList(sql.toString(), params.toArray());
+			return result;
+
+		} catch (Exception e) {
+			// TODO: handle exception
 		}
 
-		RowMapper<Student> rowMapper = new StudentRowMapper();
-
-		List<Student> selctList = jdbcTemplate.query(sql.toString(), rowMapper, params.toArray());
-		return selctList;
-
+		return null;
 	}
 
 	public List<PayName> payList() {
@@ -193,6 +208,28 @@ public class StudentDao {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
+		}
+
+	}
+
+	public Boolean upadteAccountStatus(int id, String status) {
+		try {
+			String sql = " update student set status ? where id = ?  ";
+			int rowsAffected = jdbcTemplate.update(sql, status, id);
+			return rowsAffected > 0;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	public List<Student> searchNameProcedure(String sname) {
+		try {
+			List result = jdbcTemplate.queryForList("CALL get_users_by_name(?)", sname);
+			return result;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
 		}
 
 	}

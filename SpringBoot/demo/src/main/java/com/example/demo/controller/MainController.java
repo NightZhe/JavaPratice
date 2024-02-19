@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -7,6 +8,8 @@ import java.util.Map;
 
 import javax.mail.MessagingException;
 
+import org.apache.tomcat.util.json.JSONParser;
+import org.hibernate.engine.transaction.jta.platform.internal.OC4JJtaPlatform;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,16 +21,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.demo.Dao.StudentDao;
+import com.example.demo.Model.Color;
 import com.example.demo.Model.ListDate;
 import com.example.demo.Model.LogUtil;
 import com.example.demo.Model.Product;
 import com.example.demo.Model.Student;
 import com.example.demo.Service.ProductService;
 import com.example.demo.Service.StudentService;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
-
 import jakarta.servlet.http.HttpSession;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
 public class MainController {
@@ -49,6 +51,14 @@ public class MainController {
 
     @Autowired
     ListDate listdate;
+
+    private Map<String, Object> map = new HashMap<String, Object>();
+
+    // 跳轉index
+    @RequestMapping("/index")
+    public String index(Model model) {
+        return "index";
+    }
 
     // 跳轉註冊
     @RequestMapping("/register")
@@ -105,8 +115,8 @@ public class MainController {
         System.out.println("sessionvalue:" + sessionvalue);
         System.out.println("---------------");
 
-        System.out.println("indexform:" + sname);
-        System.out.println("indexform:" + password);
+        System.out.println("indexformName:" + sname);
+        System.out.println("indexformPassword:" + password);
         Student student = new Student(sname, password);
         if (studentService.login(student)) {
             model.addAttribute("sname", student.getSname());
@@ -160,23 +170,18 @@ public class MainController {
     }
 
     @RequestMapping("/creatTable")
-    @ResponseBody
-    public String creatTable(Model model, Object data) {
-
+    public String creatTable(Model model) {
         if (studentService.createTable()) {
             model.addAttribute("message1", "成功創建");
-
+        } else {
+            model.addAttribute("message1", "創建失敗");
         }
-        model.addAttribute("message1", "創建失敗");
-
         return "index";
-
     }
 
     @RequestMapping("/alllist")
     @ResponseBody
     public Map<String, Object> getlist(Student student) {
-        Map<String, Object> map = new HashMap<String, Object>();
         List<Student> list = studentService.list(student);
         List payList = studentService.payList();
         if (list != null) {
@@ -192,7 +197,7 @@ public class MainController {
 
         return map;
     }
-    // 如果使用次方法，前端function load() result = response.data; => response ，一樣可以運行
+    // 如果使用此方法，前端function load() result = response.data; => response ，一樣可以運行
     // @RequestMapping("/list")
     // @ResponseBody
     // public List getlist(Student student) {
@@ -272,4 +277,39 @@ public class MainController {
 
     }
 
+    @RequestMapping("/accountstatus")
+    public Map<String, Object> changeAcctountStatus(@RequestParam int id, String sname, String status) {
+        Boolean upadteAccountStatus = studentService.upadteAccountStatus(id, sname, status);
+
+        if (upadteAccountStatus) {
+            map.put("message", "更新成功");
+        } else {
+            map.put("message", "更新失敗");
+        }
+        return map;
+    }
+
+    @RequestMapping("/color/select")
+    @ResponseBody
+    public Map<String, Object> getSelectColor(@RequestBody Color co) {
+        String colorValue = co.getColor();
+        map.put("data", colorValue);
+        return map;
+    }
+
+    @RequestMapping("/serarch/procedure")
+    @ResponseBody
+    public Map<String, Object> searchNameprocedure(@RequestParam String searchsname) {
+        System.out.println("searchsname: " + searchsname);
+        List<Student> list = studentService.searchNameProcedure(searchsname);
+        if (list.size() != 0) {
+            map.put("states", "200");
+            map.put("data", list);
+            return map;
+        } else {
+            map.put("states", "400");
+            map.put("mseeage", "沒有資料");
+        }
+        return map;
+    }
 }

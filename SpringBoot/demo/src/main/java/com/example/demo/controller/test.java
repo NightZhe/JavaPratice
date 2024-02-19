@@ -1,16 +1,36 @@
 package com.example.demo.controller;
 
 import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
+
 import com.example.demo.Model.LogUtil;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.core.convert.converter.Converter;
 
 public class test {
 
     public static void main(String[] args) {
+        // 创建一个示例的 Map
+        Map<String, Integer> map = new HashMap<>();
+        map.put("key1", 1);
+        map.put("key2", 2);
+        map.put("key3", 3);
+
+        // 获取 Map 中所有键的集合
+        for (String key : map.keySet()) {
+            System.out.println("Key: " + key);
+        }
         // int i = 0;
         // i = (int) (Math.random() * 100000) + 1000;
         // System.out.println(i);
@@ -119,7 +139,47 @@ class Solution {
         System.out.println(numLength);
 
         return new int[] {};
-
     }
 
+    public static void main(String[] args) {
+
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+        String source = "2023/12/11";
+        try {
+            Date date = dateFormat.parse(source);
+            Calendar cal = Calendar.getInstance();
+            String dateString = dateFormat.format(cal.getTime());
+            Date date2 = dateFormat.parse(dateString);
+
+            System.out.println("date2: " + date2);
+            System.out.println("date2: " + date2.getClass().getTypeName());
+            // System.out.println("date: " + date.getClass().getTypeName());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        // Calendar cal = Calendar.getInstance();
+        // cal.add(Calendar.DATE, -10);
+        // String dateString = dateFormat.format(cal.getTime());
+        // System.out.println("cal: " + cal);
+    }
+}
+
+class fubon {
+    public static void main(String[] args) {
+        List<ArrayList<String>> tempArrayLists = new ArrayList<ArrayList<String>>();
+        tempArrayLists.add(new ArrayList<String>());
+        tempArrayLists.add(new ArrayList<String>());
+        tempArrayLists.add(new ArrayList<String>());
+        tempArrayLists.add(new ArrayList<String>());
+
+        tempArrayLists.get(0).add("apple");
+        tempArrayLists.get(0).add("iphone");
+        tempArrayLists.get(1).add("banana");
+        String ff001 = "134124";
+        boolean isNumber = ff001.matches("^[0-9]+$");
+        System.out.println("boolean isNumber: " + isNumber);
+        System.out.println(tempArrayLists);
+        System.out.println(tempArrayLists.get(0).get(0));
+    }
 }
