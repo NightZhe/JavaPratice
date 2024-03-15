@@ -1,5 +1,7 @@
 package com.example.demo.Model;
 
+import java.util.List;
+
 import org.springframework.data.relational.core.mapping.Embedded.Nullable;
 
 import org.springframework.stereotype.Component;
@@ -18,6 +20,7 @@ public class Student {
     private String status;
     private int pageNum;
     private int pageSize = 100000;
+    private List<Student> studentList;
 
     public Student() {
 
@@ -155,6 +158,14 @@ public class Student {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public List<Student> getStudentList() {
+        return studentList;
+    }
+
+    public void setStudentList(List<Student> studentList) {
+        this.studentList = studentList;
     }
 
 }

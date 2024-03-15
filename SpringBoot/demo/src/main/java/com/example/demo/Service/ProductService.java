@@ -10,4 +10,6 @@ public interface ProductService {
 
     public Boolean changestatus(Product product); // 改變訂單狀態
 
+    // public List<Product> getStreamList(Product pd);
+
 }

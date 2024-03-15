@@ -3,6 +3,7 @@ package com.example.demo.Model;
 import org.springframework.stereotype.Component;
 
 @Component
+
 public class Product {
     private int pid;
     private String pno;
@@ -71,6 +72,5 @@ public class Product {
     public void setStatusNC(String statusNC) {
         this.statusNC = statusNC;
     }
-    
 
 }

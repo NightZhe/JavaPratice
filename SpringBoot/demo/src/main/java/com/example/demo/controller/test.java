@@ -182,4 +182,33 @@ class fubon {
         System.out.println(tempArrayLists);
         System.out.println(tempArrayLists.get(0).get(0));
     }
+
+}
+
+class testleetcode {
+    public static void main(String[] args) {
+        sumToTraget solution = new sumToTraget();
+        int[] nums = { 2, 7, 8, 9 };
+        int target = 9;
+        int[] answer = solution.toSum(nums, target);
+
+        for (int num : answer) {
+            System.out.println("num:" + num);
+
+        }
+
+    }
+}
+
+class sumToTraget {
+    public int[] toSum(int[] nums, int target) {
+        for (int i = 0; i < nums.length; i++) {
+            for (int j = i + 1; j < nums.length; j++) {
+                if (nums[i] + nums[j] == target)
+                    return new int[] { nums[i], nums[j] };
+            }
+        }
+        return new int[] {};
+    }
+
 }

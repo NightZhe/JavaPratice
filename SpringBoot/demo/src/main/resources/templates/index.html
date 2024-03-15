@@ -62,6 +62,7 @@
             支付方式<select id="payMethod">
                 <option value="0">全選</option>
             </select>
+            <button type="submit" name="getTableIdValue" onclick="getTableIdValue()">獲取某個表個id底下數據</button>
             <button type="submit" name="查詢表格" id="searchData" onclick=search();>搜索</button>
             <button type="submit" name='serarchNameprecedure' id="serarchNameprecedure"
                 onclick=getSearchNameProcedure();>procedure查詢</button><br />
@@ -104,9 +105,8 @@
                 <tr>
                     <td>序號</td>
                     <td>id</td>
-                    <td>name</td>
-                    <td>password</td>
-                    <td>email</td>
+                    <td>sno</td>
+                    <td>payid</td>
                     <td>edit</td>
                     <td>delete</td>
                 </tr>
@@ -114,10 +114,13 @@
             <hr>
             <h1>分頁</h1>
             <div id="pagination-container"></div>
-
+            產品編號<input type="text" name="pno">
+            <button type="submit" id="reponsitoryProudctPnoSearch" onclick="getSomeoneProduct()">獲取某個產品</button>
+            <button type="submit" id="checkedbutton" onclick="checksubmit()">確認選取項目</button>
             <button type="submit" id="modifyStatus" onclick="changeStatus()">變更狀態</button>
             <table id=productTable class="productdata" border=1>
                 <tr>
+                    <td></td>
                     <td>pid</td>
                     <td>pno</td>
                     <td>pname</td>
@@ -162,12 +165,112 @@
             <button type="submit" onclick=getselectcolor()>獲取選擇顏色按鈕</button>
             <input type="text" naem="oodd"> oodd
             <button type="submit" onclick="ceheckEmpty()">確認是否為空值</button>
+            <button type="submit" onclick="setAll()">測試獲取學生資料</button>
+            <button type="submit" onclick="getreturn()">獲取return</button>
+
+            <script th:inline="javascript">
+                function getreturn() {
+                    var i;
+                    var j;
+                    var dataArray = []
+                    dataArray = getTableIdValue()
+                    console.log("dataArray:" + dataArray);
+                }
+                function getTableIdValue() {
+                    var preDelectArray = [];
+                    var sno;
+
+                    var rows = $('#table > tbody > .trs');
+                    // rows.each(function () {
+                    //     sno = $(this).find('input[name=sno]').val();
+                    //     dataArray.push(sno);
+                    // })
+
+                    // for (var i = 0; i < $(rows).length; i++) {
+                    //     var id = $(rows[i]).find('input[name=id]').val();
+                    //     console.log("id:" + id);
+                    // }
+
+                    var checkedIndexes = [];
+                    for (var i = 0; i < $(rows).length; i++) {
+                        sno_i = $(rows[i]).find('input[name=sno]').val();
+                        if (!checkedIndexes.includes(sno_i)) {
+                            for (var j = i + 1; j < $(rows).length; j++) {
+                                sno_j = $(rows[j]).find('input[name=sno]').val();
+                                if (sno_i == sno_j) {
+                                    var payid_i = $(rows[i]).find('input[name=payid]').val();
+                                    var payid_j = $(rows[j]).find('input[name=payid]').val();
+                                    var id = $(rows[j]).find('input[name=id]').val();
+                                    $(rows[i]).find('input[name=payid]').val(parseInt(payid_i) + parseInt(payid_j));
+                                    preDelectArray.push(id);
+                                    console.log("id:" + id + ", sno_i:" + sno_i + ", payid:" + payid_i);
+                                    if (!checkedIndexes.includes(sno_i))
+                                        checkedIndexes.push(sno_i);
+                                }
+                            }
+                        }
+                    }
+                    console.log("checkedIndexes: " + checkedIndexes)
+                    console.log("preDelectArray: " + preDelectArray)
 
 
+                    for (var i = $(rows).length; i >= 0; i--) {
+                        var id = $(rows[i]).find('input[name=id]').val();
+                        var sno_i = $(rows[i]).find('input[name=sno]').val();
+                        var payid = $(rows[i]).find('input[name=payid]').val();
+                        if (preDelectArray.includes(id)) {
+                            $(rows[i]).remove();
+                            // $(rows[i]).find('input[name=id]').remove();
+                            console.log("rows[1]" + $(rows[i]).find('input[name=id]').val())
+                        }
+                    }
+                    getResetList();
+                }
 
+                function getResetList() {
+                    var rows = $('#table > tbody > .trs');
+                    console.log("rows_length:" + $(rows).length);
+                    for (var i = 0; i < rows.length; i++) {
+                        var id = $(rows[i]).find('input[name=id]').val();
+                        var sno_i = $(rows[i]).find('input[name=sno]').val();
+                        var payid = $(rows[i]).find('input[name=payid]').val();
+                        $(".procedure").append("<tr class='trs'><td>"
+                            + (i + 1) + "</td><td>"
+                            + id + "</td><td>"
+                            + sno_i + "</td><td>"
+                            + payid + "</td><td class='ddltd'>"
+                            + "<a href='#' onclick=edit(" + id + ");> edit</a> </td > "
+                            + "<td><a href='#' onclick=del(" + id + ");>delete</a> </td ></tr >")
+                    }
+                }
 
+                //可以接後端傳過來的值 前提是只能在thymeleaf模板，且要加上<script th:inline="javascript"> ，才可以使用
+                function setAll() {
+                    var student = /*[[${studentList}]]*/
+                        $.ajax({
+                            url: 'demo/studentList/get',
+                            method: 'post',
+                            success: function (resutl) {
+                                console.log(resutl);
+                                alert("studnetList/get 獲取成功")
+                            },
+                            error: function (resutl) {
+                                alert("獲取失敗");
+                            }
+                        })
+                }
+                function testfunction() {
+                    var obj = ''
+                    obj = obj.concat("<td>adfafdasfasfsf</td>")
+                    a = 1
+                    b = 2
+                    obj += (a < b) ? "1" : "0"
+                    alert(obj)
 
-            <script>
+                    if (a == null) {
+
+                    }
+                }
                 function getSearchNameProcedure() {
                     $(".trs").remove();
                     var searchsname = $('#serchSname').val();
@@ -318,6 +421,7 @@
                             }
                         }
                     })
+                    ///產品表格獲取
                     $.ajax({
                         url: 'product',
                         type: 'post',
@@ -325,13 +429,14 @@
                             result = response;
                             for (i = 0; i < result.length; i++) {
                                 $(".productdata").append("<tr  class='producttb'><td>"
+                                    + "<input type='checkbox' name='productChecked'></td><td>"
                                     + result[i].pid + "</td><td>"
                                     + result[i].pno + "</td><td>"
-                                    + result[i].pname + "</td><td>"
+                                    + "<input type='hidden' name='pname' value=" + result[i].pname + "" + result[i].pname + "</td><td>"
                                     + result[i].pprice + "</td><td>"
                                     + result[i].status + "</td><td>"
                                     + result[i].statusNC + "</td><td>"
-                                    // + "<button type='submit' onclick=changeStatus(" + result[i].pid, result[i].status + ");>變更狀態 </button> </td></tr>"
+                                    // + "<button type='submit' onclick=changeStatus(" + result[i].pid, result[i].status + ");>變更狀態 </button> </td ></tr > "
                                     + "<button type='submit' onclick=changeStatus(" + result[i].status + "," + result[i].pid + ") > 變更狀態</button> </td></tr>"
                                 )
                             }
@@ -339,6 +444,18 @@
                     })
                 })
 
+                function checksubmit() {
+                    var checkPdList = [];
+                    var checkPds = $('input[name=productChecked]:checked')
+
+                    $(checkPds).each(function (index, obj) {
+                        var pname = $(obj).parent().parent().find('[name^=pname]').val();
+                        var pid = $(obj).parent().parent().find('[name^=pid]').val()
+                        console.log(pname)
+                        console.log(pid)
+
+                    })
+                }
 
                 function getddlPayName() {
                     $.ajax({
@@ -375,6 +492,9 @@
                                     + (i + 1) + "</td><td>"
                                     + "<input type='radio' name='radioselect' value=" + result[i].id + ">"
                                     + "<input type='hidden' name='sname' value=" + result[i].sname + ">"
+                                    + "<input type='hidden' name='sno' value=" + result[i].sno + ">"
+                                    + "<input type='hidden' name='payid' value=" + result[i].payid + ">"
+                                    + "<input type='hidden' name='id' value=" + result[i].id + ">"
                                     + "<input type='hidden' name='status' value=" + result[i].status + "></td><td>"
                                     + result[i].id + "</td><td>"
                                     + result[i].sno + "</td><td>"
@@ -388,7 +508,7 @@
 
 
                             //每頁要顯示幾個項目
-                            var perPage = 10;
+                            var perPage = 20;
                             //總共有多少個項目
                             var numItems = $(".trs").length;
                             $(".trs").slice(perPage).hide();

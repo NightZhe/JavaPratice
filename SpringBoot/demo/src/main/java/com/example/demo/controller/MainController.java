@@ -28,6 +28,8 @@ import com.example.demo.Model.Product;
 import com.example.demo.Model.Student;
 import com.example.demo.Service.ProductService;
 import com.example.demo.Service.StudentService;
+import com.fasterxml.jackson.annotation.JsonCreator.Mode;
+
 import jakarta.servlet.http.HttpSession;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -56,7 +58,9 @@ public class MainController {
 
     // 跳轉index
     @RequestMapping("/index")
-    public String index(Model model) {
+    public String index(Model model, Student student) {
+        student.setStudentList(studentService.allList());
+        model.addAttribute("studentList", student.getStudentList());
         return "index";
     }
 
@@ -312,4 +316,28 @@ public class MainController {
         }
         return map;
     }
+
+    // @RequestMapping("/demo/studentList/get")
+    // public ResponseEntity<Map<String, Object>> getStudentList() {
+    // HashMap<String, Object> map = new HashMap<>();
+    // List<Student> list = studentService.allList();
+    // map.put("studentList", list);
+    // return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
+    // }
+
+    @RequestMapping("/demo/studentList/get")
+    public String getStudentList(Model model) {
+        List<Student> list = studentService.allList();
+        model.addAttribute("studentList", list);
+        return "index";
+    }
+
+    // @RequestMapping("/stream/product/get")
+    // public ResponseEntity<Map<String, Object>> getStreamProductList(Product pd) {
+    // HashMap<String, Object> map = new HashMap<>();
+    // List<Product> List = productService.getStreamList(pd);
+    // map.put("productList", List);
+    // return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
+    // }
+
 }

@@ -1,5 +1,6 @@
 package com.example.demo.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,17 +98,52 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public List<Student> allList() {
         List concatList = studentDao.allList();
+        // 記錄重複存在的元數
+        ArrayList temp = new ArrayList<>();
+        // 記住要刪除的元數
+        ArrayList deletetempData = new ArrayList<>();
+
+        System.out.println("orginSize: " + concatList.size());
         for (int i = 0; i < concatList.size(); i++) {
             Object elemnets = concatList.get(i);
             Student st = (Student) elemnets;
             if (st.getSage() != 0) {
                 st.setSname(st.getSname().concat(";").concat(Integer.toString(st.getSage())));
-
             }
-            System.out.println(concatList.get(i));
+            // 判斷是否有重複的值
+            if (!temp.contains(st.getSno())) {
+                for (int j = i + 1; j < concatList.size(); j++) {
+                    Object objj = concatList.get(j);
+                    Student sj = (Student) objj;
+                    if (st.getSno().equals(sj.getSno())) {
+                        st.setPayid(st.getPayid() + sj.getPayid());
+                        deletetempData.add(sj.getId());
+                        System.out.println("SJList:" + sj.getId() + "," + sj.getSno() + "," + sj.getPayid());
+                        System.out.println("id: " + st.getId() + ", Payid: " + st.getPayid() + ", Sno: " + st.getSno());
+                        if (!temp.contains(st.getSno())) {
+                            temp.add(st.getSno());
+                            System.out.println("i: " + i);
+                        }
+                    }
+                }
+            }
         }
 
+        for (int i = 0; i < concatList.size(); i++) {
+            Object elemnets = concatList.get(i);
+            Student st = (Student) elemnets;
+            if (deletetempData.contains(st.getId())) {
+                System.out.println(st.getId());
+                concatList.remove(i);
+                i = 0;
+            }
+        }
+        System.out.println("deletetempData" + deletetempData);
+        System.out.println("tempArrayList: " + temp);
+        System.out.println("After modify: " + concatList.size());
+        System.out.println("concatList: " + concatList);
         return concatList;
+
     }
 
     @Override

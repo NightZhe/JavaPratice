@@ -18,6 +18,7 @@ public class ConcatRowMapper implements RowMapper {
         st.setSno(rs.getString("sno"));
         st.setSname(rs.getString("sname"));
         st.setSage(rs.getInt("sage"));
+        st.setPayid(rs.getInt("payid"));
         return st;
 
     }

@@ -6,13 +6,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.Dao.ProductDao;
+
 import com.example.demo.Model.Product;
+
+import jakarta.transaction.Transactional;
 
 @Service
 
 public class ProductServiceImpl implements ProductService {
     @Autowired
     private ProductDao productDao;
+
+    // @Autowired
+    // private ProductRepository productRepository;
+
+    @Autowired
+    Product product;
 
     @Override
     public List<Product> allList() {
@@ -35,4 +44,13 @@ public class ProductServiceImpl implements ProductService {
         }
         return false;
     }
+
+    // @Override
+    // @Transactional
+    // public List<Product> getStreamList(Product pd) {
+    // List productList = productRepository.selectSomeoneProduct(pd.getPno());
+
+    // return productList;
+
+    // }
 }
